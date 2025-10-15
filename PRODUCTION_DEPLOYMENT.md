@@ -59,62 +59,60 @@ npm list node-red-contrib-tapo-s220
 
 ### Step 3: Update from GitHub
 
-**Option A: Update via npm (if previously installed from local path)**
+**On production server (most common - no existing git repo):**
 
 ```bash
-cd ~/.node-red
-
-# Remove old installation
-npm uninstall node-red-contrib-tapo-s220
-
-# Reinstall from local path (update the path to match your server)
-npm install /path/to/node-red-contrib-tapo-s220
-
-# OR if you've cloned the repo on the server:
-npm install ~/node-red-contrib-tapo-s220
-```
-
-**Option B: Update via Git (Recommended for production)**
-
-```bash
-# Navigate to the package directory
-cd ~/node-red-contrib-tapo-s220  # Or wherever you cloned it
-
-# Pull latest changes from GitHub
-git pull origin main
-
-# Check what changed
-git log -3
-
-# Should show:
-# a049397 docs: Update example flows and add local testing guide
-# d8ed088 docs: Remove outdated analysis and planning documents
-# c8ede82 feat: Add hub config node architecture and T310 sensor support
-
-# Reinstall in Node-RED
-cd ~/.node-red
-npm install ~/node-red-contrib-tapo-s220
-```
-
-**Option C: Fresh Clone from GitHub**
-
-```bash
-# Navigate to your home or projects directory
+# Navigate to a temp or projects directory
 cd ~
 
-# Backup old version (if exists)
-mv node-red-contrib-tapo-s220 node-red-contrib-tapo-s220.old
+# If you have an old version, remove it
+rm -rf node-red-contrib-tapo-s220
 
 # Clone fresh from GitHub
 git clone https://github.com/macdudeuk2/node-red-contrib-tapo-s220.git
 
-# Install dependencies
+# Navigate into the cloned directory
 cd node-red-contrib-tapo-s220
+
+# Install package dependencies
 npm install
 
-# Install to Node-RED
+# Verify files are present
+ls -la
+# Should see: tapo-hub.js, tapo-switch.js, tapo-sensor.js, tapo-s220.js, etc.
+
+# Now install to Node-RED
 cd ~/.node-red
 npm install ~/node-red-contrib-tapo-s220
+```
+
+**Alternative: If you already have the repo cloned (rare):**
+
+```bash
+# Update existing clone
+cd ~/node-red-contrib-tapo-s220
+git pull origin main
+
+# Reinstall dependencies
+npm install
+
+# Reinstall to Node-RED
+cd ~/.node-red
+npm install ~/node-red-contrib-tapo-s220
+```
+
+**Alternative: Direct install from GitHub URL (simplest):**
+
+```bash
+cd ~/.node-red
+
+# Uninstall old version
+npm uninstall node-red-contrib-tapo-s220
+
+# Install directly from GitHub
+npm install https://github.com/macdudeuk2/node-red-contrib-tapo-s220.git
+
+# This downloads, installs dependencies, and installs to Node-RED in one step
 ```
 
 ### Step 4: Verify Installation
@@ -399,8 +397,18 @@ npm list node-red-contrib-tapo-s220
 
 ### Update from GitHub
 ```bash
-cd ~/node-red-contrib-tapo-s220
-git pull origin main
+# Method 1: Direct install from GitHub (easiest)
+cd ~/.node-red
+npm uninstall node-red-contrib-tapo-s220
+npm install https://github.com/macdudeuk2/node-red-contrib-tapo-s220.git
+sudo systemctl restart node-red
+
+# Method 2: Clone then install
+cd ~
+rm -rf node-red-contrib-tapo-s220
+git clone https://github.com/macdudeuk2/node-red-contrib-tapo-s220.git
+cd node-red-contrib-tapo-s220
+npm install
 cd ~/.node-red
 npm install ~/node-red-contrib-tapo-s220
 sudo systemctl restart node-red
@@ -432,27 +440,56 @@ node-red-stop && node-red-start
 
 ## Summary: Safe Deployment Sequence
 
+**EASIEST METHOD (Direct from GitHub):**
+
 ```bash
 # 1. Backup
 cd ~/.node-red
 cp flows.json flows.json.backup-$(date +%Y%m%d-%H%M%S)
 
-# 2. Update code from GitHub
-cd ~/node-red-contrib-tapo-s220
-git pull origin main
+# 2. Update directly from GitHub
+npm uninstall node-red-contrib-tapo-s220
+npm install https://github.com/macdudeuk2/node-red-contrib-tapo-s220.git
 
-# 3. Reinstall
-cd ~/.node-red
-npm install ~/node-red-contrib-tapo-s220
-
-# 4. Restart
+# 3. Restart
 sudo systemctl restart node-red
 
-# 5. Verify
+# 4. Verify
 npm list node-red-contrib-tapo-s220  # Should show 2.0.0
 journalctl -u node-red -f  # Watch for errors
 
-# 6. Test
+# 5. Test
+# Open Node-RED UI, check existing flows still work
+```
+
+**ALTERNATIVE METHOD (Clone then install):**
+
+```bash
+# 1. Backup
+cd ~/.node-red
+cp flows.json flows.json.backup-$(date +%Y%m%d-%H%M%S)
+
+# 2. Clone from GitHub
+cd ~
+rm -rf node-red-contrib-tapo-s220
+git clone https://github.com/macdudeuk2/node-red-contrib-tapo-s220.git
+
+# 3. Install package dependencies
+cd node-red-contrib-tapo-s220
+npm install
+
+# 4. Install to Node-RED
+cd ~/.node-red
+npm install ~/node-red-contrib-tapo-s220
+
+# 5. Restart
+sudo systemctl restart node-red
+
+# 6. Verify
+npm list node-red-contrib-tapo-s220  # Should show 2.0.0
+journalctl -u node-red -f  # Watch for errors
+
+# 7. Test
 # Open Node-RED UI, check existing flows still work
 ```
 
