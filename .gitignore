@@ -1,0 +1,30 @@
+# Node modules
+node_modules/
+
+# npm
+npm-debug.log
+package-lock.json
+*.tgz
+
+# Testing files
+test-hub-connection.js
+test-simple.js
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Build
+dist/
+build/
+
+# Temporary files
+*.log
+.npm/

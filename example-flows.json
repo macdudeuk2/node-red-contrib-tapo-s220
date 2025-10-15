@@ -1,0 +1,368 @@
+[
+    {
+        "id": "example-flow-tab",
+        "type": "tab",
+        "label": "Tapo S220 Examples",
+        "disabled": false,
+        "info": "Example flows for testing the Tapo S220 Node-RED node"
+    },
+    {
+        "id": "discover-inject",
+        "type": "inject",
+        "z": "example-flow-tab",
+        "name": "Discover Devices",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "list",
+        "payloadType": "str",
+        "x": 150,
+        "y": 80,
+        "wires": [
+            [
+                "tapo-node-1"
+            ]
+        ]
+    },
+    {
+        "id": "tapo-node-1",
+        "type": "tapo-s220",
+        "z": "example-flow-tab",
+        "name": "My Tapo S220",
+        "deviceName": "",
+        "deviceIp": "",
+        "deviceId": "",
+        "x": 360,
+        "y": 160,
+        "wires": [
+            [
+                "debug-1"
+            ]
+        ]
+    },
+    {
+        "id": "debug-1",
+        "type": "debug",
+        "z": "example-flow-tab",
+        "name": "Output",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 570,
+        "y": 160,
+        "wires": []
+    },
+    {
+        "id": "turn-on-inject",
+        "type": "inject",
+        "z": "example-flow-tab",
+        "name": "Turn ON",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "on",
+        "payloadType": "str",
+        "x": 140,
+        "y": 140,
+        "wires": [
+            [
+                "tapo-node-1"
+            ]
+        ]
+    },
+    {
+        "id": "turn-off-inject",
+        "type": "inject",
+        "z": "example-flow-tab",
+        "name": "Turn OFF",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "off",
+        "payloadType": "str",
+        "x": 140,
+        "y": 180,
+        "wires": [
+            [
+                "tapo-node-1"
+            ]
+        ]
+    },
+    {
+        "id": "toggle-inject",
+        "type": "inject",
+        "z": "example-flow-tab",
+        "name": "Toggle",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "toggle",
+        "payloadType": "str",
+        "x": 130,
+        "y": 220,
+        "wires": [
+            [
+                "tapo-node-1"
+            ]
+        ]
+    },
+    {
+        "id": "status-inject",
+        "type": "inject",
+        "z": "example-flow-tab",
+        "name": "Get Status",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "status",
+        "payloadType": "str",
+        "x": 140,
+        "y": 260,
+        "wires": [
+            [
+                "tapo-node-1"
+            ]
+        ]
+    },
+    {
+        "id": "comment-1",
+        "type": "comment",
+        "z": "example-flow-tab",
+        "name": "Step 1: Discover your devices",
+        "info": "Click 'Discover Devices' to list all Tapo devices.\nCheck the debug output for your S220 switch IP address.",
+        "x": 200,
+        "y": 40,
+        "wires": []
+    },
+    {
+        "id": "comment-2",
+        "type": "comment",
+        "z": "example-flow-tab",
+        "name": "Step 2: Control your switch (after adding Device IP to node config)",
+        "info": "After discovering devices:\n1. Double-click the Tapo S220 node\n2. Add your device IP address\n3. Deploy\n4. Use these controls",
+        "x": 310,
+        "y": 100,
+        "wires": []
+    },
+    {
+        "id": "schedule-inject",
+        "type": "inject",
+        "z": "example-flow-tab",
+        "name": "Morning ON (7 AM)",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "00 07 * * *",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "on",
+        "payloadType": "str",
+        "x": 170,
+        "y": 360,
+        "wires": [
+            [
+                "tapo-node-2"
+            ]
+        ]
+    },
+    {
+        "id": "schedule-inject-2",
+        "type": "inject",
+        "z": "example-flow-tab",
+        "name": "Evening OFF (11 PM)",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "00 23 * * *",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "off",
+        "payloadType": "str",
+        "x": 170,
+        "y": 400,
+        "wires": [
+            [
+                "tapo-node-2"
+            ]
+        ]
+    },
+    {
+        "id": "tapo-node-2",
+        "type": "tapo-s220",
+        "z": "example-flow-tab",
+        "name": "Scheduled Switch",
+        "deviceName": "",
+        "deviceIp": "",
+        "deviceId": "",
+        "x": 390,
+        "y": 380,
+        "wires": [
+            [
+                "debug-2"
+            ]
+        ]
+    },
+    {
+        "id": "debug-2",
+        "type": "debug",
+        "z": "example-flow-tab",
+        "name": "Schedule Output",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 600,
+        "y": 380,
+        "wires": []
+    },
+    {
+        "id": "comment-3",
+        "type": "comment",
+        "z": "example-flow-tab",
+        "name": "Example: Scheduled automation",
+        "info": "Automatically turn switch ON at 7 AM and OFF at 11 PM",
+        "x": 200,
+        "y": 320,
+        "wires": []
+    },
+    {
+        "id": "monitor-inject",
+        "type": "inject",
+        "z": "example-flow-tab",
+        "name": "Monitor (every 30s)",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "30",
+        "crontab": "",
+        "once": true,
+        "onceDelay": "1",
+        "topic": "",
+        "payload": "status",
+        "payloadType": "str",
+        "x": 170,
+        "y": 500,
+        "wires": [
+            [
+                "tapo-node-3"
+            ]
+        ]
+    },
+    {
+        "id": "tapo-node-3",
+        "type": "tapo-s220",
+        "z": "example-flow-tab",
+        "name": "Monitored Switch",
+        "deviceName": "",
+        "deviceIp": "",
+        "deviceId": "",
+        "x": 390,
+        "y": 500,
+        "wires": [
+            [
+                "extract-state"
+            ]
+        ]
+    },
+    {
+        "id": "extract-state",
+        "type": "function",
+        "z": "example-flow-tab",
+        "name": "Extract State",
+        "func": "if (msg.payload.success && msg.payload.deviceInfo) {\n    const state = msg.payload.deviceInfo.device_on ? \"ON\" : \"OFF\";\n    msg.payload = {\n        state: state,\n        timestamp: new Date().toLocaleString()\n    };\n    return msg;\n}\nreturn null;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 570,
+        "y": 500,
+        "wires": [
+            [
+                "debug-3"
+            ]
+        ]
+    },
+    {
+        "id": "debug-3",
+        "type": "debug",
+        "z": "example-flow-tab",
+        "name": "Current State",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 740,
+        "y": 500,
+        "wires": []
+    },
+    {
+        "id": "comment-4",
+        "type": "comment",
+        "z": "example-flow-tab",
+        "name": "Example: Status monitoring",
+        "info": "Monitor switch state every 30 seconds",
+        "x": 180,
+        "y": 460,
+        "wires": []
+    }
+]
+

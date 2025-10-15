@@ -1,0 +1,245 @@
+<script type="text/javascript">
+    RED.nodes.registerType('tapo-s220', {
+        category: 'smart home',
+        color: '#4bc0c8',
+        defaults: {
+            name: {value: ""},
+            deviceName: {value: "", required: false},
+            hubIp: {value: "", required: true},
+            deviceId: {value: "", required: false}
+        },
+        credentials: {
+            email: {type: "text", required: true},
+            password: {type: "password", required: true}
+        },
+        inputs: 1,
+        outputs: 1,
+        icon: "light.png",
+        label: function() {
+            return this.name || this.deviceName || "tapo-s220";
+        },
+        paletteLabel: "Tapo S220",
+        oneditprepare: function() {
+            // Add help text for device discovery
+            $("#node-input-hubIp").after(
+                '<div class="form-tips" style="margin-top:10px;">' +
+                '<b>Tip:</b> Enter your H100 hub IP address. ' +
+                'Then send a "discover" command to find your S220 switches.' +
+                '</div>'
+            );
+        }
+    });
+</script>
+
+<script type="text/html" data-template-name="tapo-s220">
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="My Tapo Switch">
+    </div>
+    
+    <div class="form-row">
+        <label for="node-input-email"><i class="fa fa-envelope"></i> Email</label>
+        <input type="text" id="node-input-email" placeholder="your-tapo-email@example.com">
+    </div>
+    
+    <div class="form-row">
+        <label for="node-input-password"><i class="fa fa-lock"></i> Password</label>
+        <input type="password" id="node-input-password" placeholder="Your Tapo password">
+    </div>
+    
+    <hr style="margin: 20px 0; border: none; border-top: 1px solid #ddd;">
+    
+    <div class="form-row">
+        <label for="node-input-hubIp"><i class="fa fa-server"></i> H100 Hub IP</label>
+        <input type="text" id="node-input-hubIp" placeholder="192.168.1.100 (required)">
+    </div>
+    
+    <div class="form-row">
+        <label for="node-input-deviceId"><i class="fa fa-id-card"></i> Device ID</label>
+        <input type="text" id="node-input-deviceId" placeholder="Device ID from discovery (optional)">
+    </div>
+    
+    <div class="form-row">
+        <label for="node-input-deviceName"><i class="fa fa-info-circle"></i> Device Name</label>
+        <input type="text" id="node-input-deviceName" placeholder="Kitchen Switch (optional)">
+    </div>
+    
+    <div class="form-tips">
+        <p><strong>Configuration Steps:</strong></p>
+        <ol>
+            <li>Enter your Tapo account credentials (same as Tapo app)</li>
+            <li>Enter your <strong>H100 hub IP address</strong> (not the S220!)</li>
+            <li>Deploy the node</li>
+            <li>Send <code>msg.payload = "discover"</code> to find your S220 switches</li>
+            <li>Copy the <code>device_id</code> of your S220 from the output</li>
+            <li>Edit this node and paste the Device ID</li>
+            <li>Redeploy and start controlling your switch!</li>
+        </ol>
+        
+        <p><strong>Important:</strong> S220 switches don't have their own IP address. They communicate with the H100 hub via sub-GHz radio. You must configure the hub IP, not the switch IP.</p>
+        
+        <p><strong>Note:</strong> Make sure your email is all lowercase. Capital letters may cause authentication errors.</p>
+    </div>
+</script>
+
+<script type="text/html" data-help-name="tapo-s220">
+    <p>Control TP-Link Tapo S220 switches via H100 hub using Tapo cloud credentials.</p>
+
+    <h3>Architecture</h3>
+    <p><strong>Important:</strong> S220 switches do NOT have IP addresses. They communicate with the H100 hub over sub-GHz radio frequencies. This node connects to your H100 hub, which then controls the S220 switches.</p>
+
+    <h3>Configuration</h3>
+    <dl class="message-properties">
+        <dt>Email <span class="property-type">string</span></dt>
+        <dd>Your Tapo account email (use lowercase only)</dd>
+        
+        <dt>Password <span class="property-type">string</span></dt>
+        <dd>Your Tapo account password</dd>
+        
+        <dt>H100 Hub IP <span class="property-type">string</span></dt>
+        <dd><strong>Required:</strong> IP address of your H100 hub (not the S220!)</dd>
+        
+        <dt>Device ID <span class="property-type">string</span></dt>
+        <dd>Device ID of your S220 switch (get from "discover" command)</dd>
+        
+        <dt>Device Name <span class="property-type">string</span></dt>
+        <dd>Optional friendly name for the device</dd>
+    </dl>
+
+    <h3>Inputs</h3>
+    <dl class="message-properties">
+        <dt>payload <span class="property-type">string | object</span></dt>
+        <dd>Command to execute. Can be a string or object with command property.</dd>
+    </dl>
+
+    <h4>Available Commands:</h4>
+    <ul>
+        <li><code>"discover"</code> - Find all S220 switches connected to the hub</li>
+        <li><code>"on"</code> or <code>"turnon"</code> - Turn the switch ON</li>
+        <li><code>"off"</code> or <code>"turnoff"</code> - Turn the switch OFF</li>
+        <li><code>"toggle"</code> - Toggle the switch state</li>
+        <li><code>"status"</code> or <code>"getinfo"</code> - Get current device information</li>
+    </ul>
+
+    <h4>Input Examples:</h4>
+    <pre>
+// Discover S220 switches
+msg.payload = "discover";
+
+// Control with device ID in message
+msg.payload = {
+    command: "on",
+    deviceId: "your-device-id-here"
+};
+
+// Simple command (uses configured Device ID)
+msg.payload = "toggle";
+
+// Get device info
+msg.payload = "status";
+    </pre>
+
+    <h3>Outputs</h3>
+    <dl class="message-properties">
+        <dt>payload <span class="property-type">object</span></dt>
+        <dd>Response object containing command results</dd>
+    </dl>
+
+    <h4>Discover Response:</h4>
+    <pre>
+{
+    success: true,
+    command: "discover",
+    switches: [
+        {
+            device_id: "...",
+            nickname: "Kitchen Switch",
+            model: "S220",
+            category: "subg.trigger.switch",
+            status: "online",
+            device_on: true,
+            ...
+        }
+    ],
+    allDevices: [...],
+    totalDevices: 5
+}
+    </pre>
+
+    <h4>Control Response:</h4>
+    <pre>
+{
+    success: true,
+    state: "on",
+    command: "turnOn",
+    deviceId: "..."
+}
+    </pre>
+
+    <h4>Status Response:</h4>
+    <pre>
+{
+    success: true,
+    command: "getInfo",
+    deviceInfo: {
+        device_id: "...",
+        nickname: "Kitchen Switch",
+        model: "S220",
+        device_on: true,
+        status: "online",
+        at_low_battery: false,
+        signal_level: 3,
+        ...
+    }
+}
+    </pre>
+
+    <h4>Error Response:</h4>
+    <pre>
+{
+    success: false,
+    error: "Error message"
+}
+    </pre>
+
+    <h3>Setup Workflow</h3>
+    <ol>
+        <li>Find your H100 hub IP address (check your router or Tapo app)</li>
+        <li>Configure the node:
+            <ul>
+                <li>Tapo email and password</li>
+                <li>H100 Hub IP address</li>
+            </ul>
+        </li>
+        <li>Deploy the node</li>
+        <li>Inject: <code>msg.payload = "discover"</code></li>
+        <li>Check debug output for your S220 switches</li>
+        <li>Copy the <code>device_id</code> you want to control</li>
+        <li>Edit node and paste Device ID</li>
+        <li>Redeploy and start controlling!</li>
+    </ol>
+
+    <h3>How It Works</h3>
+    <p>The Tapo S220 is a sub-GHz device that communicates with the H100 hub using radio frequencies (not WiFi). This means:</p>
+    <ul>
+        <li>S220 switches do not have IP addresses</li>
+        <li>You cannot connect to them directly</li>
+        <li>All commands go through the H100 hub</li>
+        <li>The hub translates commands to sub-GHz signals</li>
+    </ul>
+
+    <h3>Troubleshooting</h3>
+    <ul>
+        <li><strong>Invalid authentication:</strong> Ensure your email is all lowercase</li>
+        <li><strong>Hub not found:</strong> Check H100 hub IP address is correct</li>
+        <li><strong>No switches discovered:</strong> Ensure S220 is paired with H100 in Tapo app</li>
+        <li><strong>Commands not working:</strong> Make sure Device ID is configured</li>
+        <li><strong>Device offline:</strong> Check S220 battery and signal strength</li>
+    </ul>
+
+    <h3>References</h3>
+    <ul>
+        <li><a href="https://github.com/zmx264/homebridge-kasa-hub" target="_blank">homebridge-kasa-hub</a> - Implementation reference</li>
+        <li><a href="https://www.tp-link.com/us/support/faq/2963/" target="_blank">Tapo Device Documentation</a></li>
+    </ul>
+</script>
