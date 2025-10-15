@@ -1,0 +1,92 @@
+<script type="text/javascript">
+    RED.nodes.registerType('tapo-hub', {
+        category: 'config',
+        defaults: {
+            name: {value: "", required: false},
+            hubIp: {value: "", required: true}
+        },
+        credentials: {
+            email: {type: "text", required: true},
+            password: {type: "password", required: true}
+        },
+        label: function() {
+            return this.name || ("Tapo Hub (" + this.hubIp + ")");
+        }
+    });
+</script>
+
+<script type="text/html" data-template-name="tapo-hub">
+    <div class="form-row">
+        <label for="node-config-input-name"><i class="fa fa-tag"></i> Name</label>
+        <input type="text" id="node-config-input-name" placeholder="My H100 Hub">
+    </div>
+    
+    <div class="form-row">
+        <label for="node-config-input-hubIp"><i class="fa fa-server"></i> Hub IP Address</label>
+        <input type="text" id="node-config-input-hubIp" placeholder="192.168.1.100">
+    </div>
+    
+    <hr style="margin: 20px 0; border: none; border-top: 1px solid #ddd;">
+    
+    <div class="form-row">
+        <label for="node-config-input-email"><i class="fa fa-envelope"></i> Tapo Email</label>
+        <input type="text" id="node-config-input-email" placeholder="your-tapo-email@example.com">
+    </div>
+    
+    <div class="form-row">
+        <label for="node-config-input-password"><i class="fa fa-lock"></i> Tapo Password</label>
+        <input type="password" id="node-config-input-password" placeholder="Your Tapo password">
+    </div>
+    
+    <div class="form-tips">
+        <p><strong>H100 Hub Configuration</strong></p>
+        <ul>
+            <li>Enter your Tapo account credentials (same as Tapo app)</li>
+            <li>Enter your H100 hub IP address (find it in your router or Tapo app)</li>
+            <li><strong>Note:</strong> Email must be lowercase to avoid authentication errors</li>
+            <li>This configuration will be shared by all Tapo device nodes</li>
+        </ul>
+    </div>
+</script>
+
+<script type="text/html" data-help-name="tapo-hub">
+    <p>Configuration node for TP-Link Tapo H100 hub connection.</p>
+    
+    <h3>Overview</h3>
+    <p>This configuration node manages the connection to your H100 hub and is shared by all Tapo device nodes (switches, sensors, etc.).</p>
+    
+    <h3>Configuration</h3>
+    <dl class="message-properties">
+        <dt>Name <span class="property-type">string</span></dt>
+        <dd>Optional friendly name for this hub</dd>
+        
+        <dt>Hub IP Address <span class="property-type">string</span></dt>
+        <dd>IP address of your H100 hub (not the device IP!)</dd>
+        
+        <dt>Tapo Email <span class="property-type">string</span></dt>
+        <dd>Your Tapo account email (use lowercase only)</dd>
+        
+        <dt>Tapo Password <span class="property-type">string</span></dt>
+        <dd>Your Tapo account password</dd>
+    </dl>
+    
+    <h3>Usage</h3>
+    <ol>
+        <li>Create this config node with your H100 hub details</li>
+        <li>Add device nodes (tapo-switch, tapo-sensor, etc.)</li>
+        <li>Select this hub configuration in each device node</li>
+        <li>All devices will share the same hub connection</li>
+    </ol>
+    
+    <h3>Architecture</h3>
+    <p>Tapo S220 switches, T310 sensors, and other sub-GHz devices communicate with the H100 hub via radio frequencies (not WiFi). This config node manages the connection to the hub, which then controls/reads the child devices.</p>
+    
+    <h3>Benefits</h3>
+    <ul>
+        <li>Configure credentials once, use everywhere</li>
+        <li>Single hub connection shared by all device nodes</li>
+        <li>Better performance and resource usage</li>
+        <li>Easier to maintain and update</li>
+    </ul>
+</script>
+

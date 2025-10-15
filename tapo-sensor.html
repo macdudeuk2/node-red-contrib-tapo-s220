@@ -1,0 +1,194 @@
+<script type="text/javascript">
+    RED.nodes.registerType('tapo-sensor', {
+        category: 'smart home',
+        color: '#ff9966',
+        defaults: {
+            name: {value: ""},
+            hub: {value: "", type: "tapo-hub", required: true},
+            deviceId: {value: "", required: false},
+            deviceName: {value: "", required: false}
+        },
+        inputs: 1,
+        outputs: 1,
+        icon: "font-awesome/fa-thermometer-half",
+        label: function() {
+            return this.name || this.deviceName || "tapo sensor";
+        },
+        paletteLabel: "Tapo Sensor"
+    });
+</script>
+
+<script type="text/html" data-template-name="tapo-sensor">
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Boiler Room Sensor">
+    </div>
+    
+    <div class="form-row">
+        <label for="node-input-hub"><i class="fa fa-server"></i> Hub</label>
+        <input type="text" id="node-input-hub" placeholder="Select hub configuration">
+    </div>
+    
+    <hr style="margin: 20px 0; border: none; border-top: 1px solid #ddd;">
+    
+    <div class="form-row">
+        <label for="node-input-deviceId"><i class="fa fa-id-card"></i> Device ID</label>
+        <input type="text" id="node-input-deviceId" placeholder="Get from 'discover' command (optional)">
+    </div>
+    
+    <div class="form-row">
+        <label for="node-input-deviceName"><i class="fa fa-info-circle"></i> Device Name</label>
+        <input type="text" id="node-input-deviceName" placeholder="From Tapo app (optional)">
+    </div>
+    
+    <div class="form-tips">
+        <p><strong>Quick Start:</strong></p>
+        <ol>
+            <li>Create a <strong>tapo-hub</strong> config node (if you haven't already)</li>
+            <li>Select the hub from the dropdown above</li>
+            <li>Deploy and send <code>msg.payload = "discover"</code> to find your sensors</li>
+            <li>Copy the <code>device_id</code> from the output</li>
+            <li>Paste it into the Device ID field above</li>
+            <li>Redeploy and start reading temperature/humidity!</li>
+        </ol>
+        
+        <p><strong>Note:</strong> T310/T315 sensors communicate with the H100 hub via sub-GHz radio. They don't have IP addresses.</p>
+    </div>
+</script>
+
+<script type="text/html" data-help-name="tapo-sensor">
+    <p>Read temperature and humidity from TP-Link Tapo sensors (T310, T315) via H100 hub.</p>
+
+    <h3>Configuration</h3>
+    <dl class="message-properties">
+        <dt>Hub <span class="property-type">tapo-hub</span></dt>
+        <dd>Hub configuration node (contains credentials and hub IP)</dd>
+        
+        <dt>Device ID <span class="property-type">string</span></dt>
+        <dd>Unique device ID from hub discovery (optional for discover command)</dd>
+        
+        <dt>Device Name <span class="property-type">string</span></dt>
+        <dd>Optional friendly name from Tapo app</dd>
+    </dl>
+
+    <h3>Inputs</h3>
+    <dl class="message-properties">
+        <dt>payload <span class="property-type">string | object</span></dt>
+        <dd>Command to execute. Can be a string or object with command property.</dd>
+    </dl>
+
+    <h4>Available Commands:</h4>
+    <ul>
+        <li><code>"discover"</code> - Find all temperature/humidity sensors</li>
+        <li><code>"read"</code> or <code>"status"</code> - Get current temperature and humidity readings</li>
+    </ul>
+
+    <h4>Input Examples:</h4>
+    <pre>
+// Discover sensors
+msg.payload = "discover";
+
+// Read sensor with device ID in message
+msg.payload = {
+    command: "read",
+    deviceId: "your-device-id-here"
+};
+
+// Simple read (uses configured Device ID)
+msg.payload = "read";
+
+// Get sensor info (alias for read)
+msg.payload = "status";
+    </pre>
+
+    <h3>Outputs</h3>
+    <dl class="message-properties">
+        <dt>payload <span class="property-type">object</span></dt>
+        <dd>Response object containing sensor readings</dd>
+    </dl>
+
+    <h4>Discover Response:</h4>
+    <pre>
+{
+    success: true,
+    command: "discover",
+    sensors: [
+        {
+            device_id: "...",
+            nickname: "Boiler Room Sensor",
+            model: "T310",
+            status: "online",
+            at_low_battery: false,
+            signal_level: 1,
+            raw: {
+                current_temp: 24.5,
+                current_humidity: 66,
+                temp_unit: "celsius",
+                ...
+            }
+        }
+    ],
+    allDevices: [...],
+    totalDevices: 8
+}
+    </pre>
+
+    <h4>Read Response:</h4>
+    <pre>
+{
+    success: true,
+    command: "read",
+    deviceId: "...",
+    readings: {
+        temperature: 24.5,
+        humidity: 66,
+        temp_unit: "celsius",
+        temp_exception: 0,
+        humidity_exception: 6
+    },
+    device: {
+        nickname: "Boiler Room Sensor",
+        model: "T310",
+        status: "online",
+        battery_low: false,
+        signal_level: 1,
+        rssi: -82,
+        report_interval: 16
+    },
+    timestamp: "2025-10-15T10:30:00.000Z"
+}
+    </pre>
+
+    <h4>Error Response:</h4>
+    <pre>
+{
+    success: false,
+    error: "Error message"
+}
+    </pre>
+
+    <h3>Temperature Units</h3>
+    <p>Sensors report temperature in the unit configured in the Tapo app (celsius or fahrenheit). The <code>temp_unit</code> field indicates which unit is being used.</p>
+
+    <h3>Battery & Signal Monitoring</h3>
+    <p>The response includes battery status (<code>battery_low</code>) and signal strength (<code>signal_level</code>, <code>rssi</code>). Monitor these to ensure reliable sensor operation.</p>
+
+    <h3>Architecture</h3>
+    <p>Tapo sensors use sub-GHz radio to communicate with the H100 hub (not WiFi). This node connects to the hub, which then reads the sensor data wirelessly.</p>
+
+    <h3>Supported Models</h3>
+    <ul>
+        <li>T310 - Temperature & Humidity Sensor</li>
+        <li>T315 - Temperature & Humidity Sensor (with display)</li>
+    </ul>
+
+    <h3>Example Flow</h3>
+    <p>Read sensor every 5 minutes and trigger alert if temperature exceeds threshold:</p>
+    <pre>
+[inject: interval 5 min]
+  → [tapo-sensor: read]
+  → [function: check temp > 30]
+  → [alert node]
+    </pre>
+</script>
+

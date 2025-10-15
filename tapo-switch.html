@@ -1,0 +1,173 @@
+<script type="text/javascript">
+    RED.nodes.registerType('tapo-switch', {
+        category: 'smart home',
+        color: '#4bc0c8',
+        defaults: {
+            name: {value: ""},
+            hub: {value: "", type: "tapo-hub", required: true},
+            deviceId: {value: "", required: false},
+            deviceName: {value: "", required: false}
+        },
+        inputs: 1,
+        outputs: 1,
+        icon: "light.png",
+        label: function() {
+            return this.name || this.deviceName || "tapo switch";
+        },
+        paletteLabel: "Tapo Switch"
+    });
+</script>
+
+<script type="text/html" data-template-name="tapo-switch">
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Kitchen Lights">
+    </div>
+    
+    <div class="form-row">
+        <label for="node-input-hub"><i class="fa fa-server"></i> Hub</label>
+        <input type="text" id="node-input-hub" placeholder="Select hub configuration">
+    </div>
+    
+    <hr style="margin: 20px 0; border: none; border-top: 1px solid #ddd;">
+    
+    <div class="form-row">
+        <label for="node-input-deviceId"><i class="fa fa-id-card"></i> Device ID</label>
+        <input type="text" id="node-input-deviceId" placeholder="Get from 'discover' command (optional)">
+    </div>
+    
+    <div class="form-row">
+        <label for="node-input-deviceName"><i class="fa fa-info-circle"></i> Device Name</label>
+        <input type="text" id="node-input-deviceName" placeholder="From Tapo app (optional)">
+    </div>
+    
+    <div class="form-tips">
+        <p><strong>Quick Start:</strong></p>
+        <ol>
+            <li>Create a <strong>tapo-hub</strong> config node (if you haven't already)</li>
+            <li>Select the hub from the dropdown above</li>
+            <li>Deploy and send <code>msg.payload = "discover"</code> to find your switches</li>
+            <li>Copy the <code>device_id</code> from the output</li>
+            <li>Paste it into the Device ID field above</li>
+            <li>Redeploy and start controlling your switch!</li>
+        </ol>
+        
+        <p><strong>Note:</strong> S220 switches communicate with the H100 hub via sub-GHz radio. They don't have IP addresses.</p>
+    </div>
+</script>
+
+<script type="text/html" data-help-name="tapo-switch">
+    <p>Control TP-Link Tapo smart switches (S220, S210, S200) via H100 hub.</p>
+
+    <h3>Configuration</h3>
+    <dl class="message-properties">
+        <dt>Hub <span class="property-type">tapo-hub</span></dt>
+        <dd>Hub configuration node (contains credentials and hub IP)</dd>
+        
+        <dt>Device ID <span class="property-type">string</span></dt>
+        <dd>Unique device ID from hub discovery (optional for discover command)</dd>
+        
+        <dt>Device Name <span class="property-type">string</span></dt>
+        <dd>Optional friendly name from Tapo app</dd>
+    </dl>
+
+    <h3>Inputs</h3>
+    <dl class="message-properties">
+        <dt>payload <span class="property-type">string | object</span></dt>
+        <dd>Command to execute. Can be a string or object with command property.</dd>
+    </dl>
+
+    <h4>Available Commands:</h4>
+    <ul>
+        <li><code>"discover"</code> - Find all switches connected to the hub</li>
+        <li><code>"on"</code> or <code>"turnon"</code> - Turn the switch ON</li>
+        <li><code>"off"</code> or <code>"turnoff"</code> - Turn the switch OFF</li>
+        <li><code>"toggle"</code> - Toggle the switch state</li>
+        <li><code>"status"</code> or <code>"getinfo"</code> - Get current device information</li>
+    </ul>
+
+    <h4>Input Examples:</h4>
+    <pre>
+// Discover switches
+msg.payload = "discover";
+
+// Control with device ID in message
+msg.payload = {
+    command: "on",
+    deviceId: "your-device-id-here"
+};
+
+// Simple command (uses configured Device ID)
+msg.payload = "toggle";
+
+// Get device info
+msg.payload = "status";
+    </pre>
+
+    <h3>Outputs</h3>
+    <dl class="message-properties">
+        <dt>payload <span class="property-type">object</span></dt>
+        <dd>Response object containing command results</dd>
+    </dl>
+
+    <h4>Discover Response:</h4>
+    <pre>
+{
+    success: true,
+    command: "discover",
+    switches: [
+        {
+            device_id: "...",
+            nickname: "Kitchen Switch",
+            model: "S220",
+            status: "online",
+            device_on: true,
+            battery_percentage: 100,
+            signal_level: 3,
+            ...
+        }
+    ],
+    allDevices: [...],
+    totalDevices: 5
+}
+    </pre>
+
+    <h4>Control Response:</h4>
+    <pre>
+{
+    success: true,
+    state: "on",
+    command: "turnOn",
+    deviceId: "..."
+}
+    </pre>
+
+    <h4>Status Response:</h4>
+    <pre>
+{
+    success: true,
+    command: "getInfo",
+    deviceInfo: {
+        device_id: "...",
+        nickname: "Kitchen Switch",
+        model: "S220",
+        device_on: true,
+        status: "online",
+        at_low_battery: false,
+        signal_level: 3,
+        ...
+    }
+}
+    </pre>
+
+    <h3>Architecture</h3>
+    <p>Tapo switches use sub-GHz radio to communicate with the H100 hub (not WiFi). This node connects to the hub, which then controls the switches wirelessly.</p>
+
+    <h3>Supported Models</h3>
+    <ul>
+        <li>S220 - Dual Gang Smart Switch</li>
+        <li>S210 - Single Gang Smart Switch</li>
+        <li>S200 - Smart Button</li>
+    </ul>
+</script>
+

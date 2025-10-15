@@ -1,7 +1,7 @@
 {
   "name": "node-red-contrib-tapo-s220",
-  "version": "1.0.0",
-  "description": "Node-RED node for controlling TP-Link Tapo S220 switches via H100 hub",
+  "version": "2.0.0",
+  "description": "Node-RED nodes for TP-Link Tapo devices via H100 hub - switches (S220/S210) and sensors (T310/T315)",
   "main": "tapo-s220.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -13,15 +13,24 @@
     "tp-link",
     "s220",
     "s210",
+    "s200",
+    "t310",
+    "t315",
     "h100",
     "hub",
     "smart-home",
     "iot",
-    "switch"
+    "switch",
+    "sensor",
+    "temperature",
+    "humidity"
   ],
   "node-red": {
     "nodes": {
-      "tapo-s220": "tapo-s220.js"
+      "tapo-s220": "tapo-s220.js",
+      "tapo-hub": "tapo-hub.js",
+      "tapo-switch": "tapo-switch.js",
+      "tapo-sensor": "tapo-sensor.js"
     }
   },
   "author": "Andy Collington",
