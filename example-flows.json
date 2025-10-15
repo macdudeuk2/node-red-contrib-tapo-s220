@@ -1,369 +1,418 @@
 [
     {
-        "id": "example-flow-tab",
+        "id": "example-tab-v2",
         "type": "tab",
-        "label": "Tapo S220 Examples",
+        "label": "Tapo Hub Examples (v2.0)",
         "disabled": false,
-        "info": "Example flows for testing the Tapo S220 Node-RED node"
+        "info": "Example flows for the new hub config architecture with switches and sensors"
     },
     {
-        "id": "discover-inject",
-        "type": "inject",
-        "z": "example-flow-tab",
-        "name": "Discover Devices",
-        "props": [
-            {
-                "p": "payload"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "",
-        "payload": "list",
-        "payloadType": "str",
-        "x": 150,
-        "y": 80,
-        "wires": [
-            [
-                "tapo-node-1"
-            ]
-        ]
+        "id": "hub-config-example",
+        "type": "tapo-hub",
+        "name": "My H100 Hub"
     },
     {
-        "id": "tapo-node-1",
-        "type": "tapo-s220",
-        "z": "example-flow-tab",
-        "name": "My Tapo S220",
-        "deviceName": "",
-        "deviceIp": "",
-        "deviceId": "",
-        "x": 360,
-        "y": 160,
-        "wires": [
-            [
-                "debug-1"
-            ]
-        ]
-    },
-    {
-        "id": "debug-1",
-        "type": "debug",
-        "z": "example-flow-tab",
-        "name": "Output",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "payload",
-        "targetType": "msg",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 570,
-        "y": 160,
-        "wires": []
-    },
-    {
-        "id": "turn-on-inject",
-        "type": "inject",
-        "z": "example-flow-tab",
-        "name": "Turn ON",
-        "props": [
-            {
-                "p": "payload"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "",
-        "payload": "on",
-        "payloadType": "str",
-        "x": 140,
-        "y": 140,
-        "wires": [
-            [
-                "tapo-node-1"
-            ]
-        ]
-    },
-    {
-        "id": "turn-off-inject",
-        "type": "inject",
-        "z": "example-flow-tab",
-        "name": "Turn OFF",
-        "props": [
-            {
-                "p": "payload"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "",
-        "payload": "off",
-        "payloadType": "str",
-        "x": 140,
-        "y": 180,
-        "wires": [
-            [
-                "tapo-node-1"
-            ]
-        ]
-    },
-    {
-        "id": "toggle-inject",
-        "type": "inject",
-        "z": "example-flow-tab",
-        "name": "Toggle",
-        "props": [
-            {
-                "p": "payload"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "",
-        "payload": "toggle",
-        "payloadType": "str",
-        "x": 130,
-        "y": 220,
-        "wires": [
-            [
-                "tapo-node-1"
-            ]
-        ]
-    },
-    {
-        "id": "status-inject",
-        "type": "inject",
-        "z": "example-flow-tab",
-        "name": "Get Status",
-        "props": [
-            {
-                "p": "payload"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "",
-        "payload": "status",
-        "payloadType": "str",
-        "x": 140,
-        "y": 260,
-        "wires": [
-            [
-                "tapo-node-1"
-            ]
-        ]
-    },
-    {
-        "id": "comment-1",
+        "id": "comment-setup",
         "type": "comment",
-        "z": "example-flow-tab",
-        "name": "Step 1: Discover your devices",
-        "info": "Click 'Discover Devices' to list all Tapo devices.\nCheck the debug output for your S220 switch IP address.",
+        "z": "example-tab-v2",
+        "name": "SETUP: Configure Hub First!",
+        "info": "1. Double-click any device node below\n2. Click pencil icon next to 'Hub' dropdown\n3. Add your H100 hub details:\n   - Hub IP: 192.168.1.100 (your hub IP)\n   - Email: your-email@example.com (lowercase!)\n   - Password: your password\n4. Click 'Add'\n5. Deploy",
         "x": 200,
         "y": 40,
         "wires": []
     },
     {
-        "id": "comment-2",
+        "id": "comment-discovery",
         "type": "comment",
-        "z": "example-flow-tab",
-        "name": "Step 2: Control your switch (after adding Device IP to node config)",
-        "info": "After discovering devices:\n1. Double-click the Tapo S220 node\n2. Add your device IP address\n3. Deploy\n4. Use these controls",
-        "x": 310,
+        "z": "example-tab-v2",
+        "name": "Step 1: Discover Devices",
+        "info": "Click these inject nodes to discover your devices on the hub",
+        "x": 180,
         "y": 100,
         "wires": []
     },
     {
-        "id": "schedule-inject",
+        "id": "discover-switches-inject",
         "type": "inject",
-        "z": "example-flow-tab",
-        "name": "Morning ON (7 AM)",
-        "props": [
-            {
-                "p": "payload"
-            }
-        ],
+        "z": "example-tab-v2",
+        "name": "Discover Switches",
+        "props": [{"p": "payload"}],
         "repeat": "",
-        "crontab": "00 07 * * *",
+        "crontab": "",
         "once": false,
-        "onceDelay": 0.1,
         "topic": "",
-        "payload": "on",
+        "payload": "discover",
         "payloadType": "str",
-        "x": 170,
-        "y": 360,
-        "wires": [
-            [
-                "tapo-node-2"
-            ]
-        ]
+        "x": 150,
+        "y": 140,
+        "wires": [["switch-node-1"]]
     },
     {
-        "id": "schedule-inject-2",
-        "type": "inject",
-        "z": "example-flow-tab",
-        "name": "Evening OFF (11 PM)",
-        "props": [
-            {
-                "p": "payload"
-            }
-        ],
-        "repeat": "",
-        "crontab": "00 23 * * *",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "",
-        "payload": "off",
-        "payloadType": "str",
-        "x": 170,
-        "y": 400,
-        "wires": [
-            [
-                "tapo-node-2"
-            ]
-        ]
-    },
-    {
-        "id": "tapo-node-2",
-        "type": "tapo-s220",
-        "z": "example-flow-tab",
-        "name": "Scheduled Switch",
-        "deviceName": "",
-        "deviceIp": "",
+        "id": "switch-node-1",
+        "type": "tapo-switch",
+        "z": "example-tab-v2",
+        "name": "Switch Discovery",
+        "hub": "hub-config-example",
         "deviceId": "",
-        "x": 390,
-        "y": 380,
-        "wires": [
-            [
-                "debug-2"
-            ]
-        ]
+        "deviceName": "",
+        "x": 340,
+        "y": 140,
+        "wires": [["debug-switches"]]
     },
     {
-        "id": "debug-2",
+        "id": "debug-switches",
         "type": "debug",
-        "z": "example-flow-tab",
-        "name": "Schedule Output",
+        "z": "example-tab-v2",
+        "name": "Switch List",
         "active": true,
         "tosidebar": true,
         "console": false,
-        "tostatus": false,
         "complete": "payload",
-        "targetType": "msg",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 600,
-        "y": 380,
+        "x": 530,
+        "y": 140,
         "wires": []
     },
     {
-        "id": "comment-3",
-        "type": "comment",
-        "z": "example-flow-tab",
-        "name": "Example: Scheduled automation",
-        "info": "Automatically turn switch ON at 7 AM and OFF at 11 PM",
-        "x": 200,
-        "y": 320,
-        "wires": []
-    },
-    {
-        "id": "monitor-inject",
+        "id": "discover-sensors-inject",
         "type": "inject",
-        "z": "example-flow-tab",
-        "name": "Monitor (every 30s)",
-        "props": [
-            {
-                "p": "payload"
-            }
-        ],
-        "repeat": "30",
+        "z": "example-tab-v2",
+        "name": "Discover Sensors",
+        "props": [{"p": "payload"}],
+        "repeat": "",
         "crontab": "",
-        "once": true,
-        "onceDelay": "1",
+        "once": false,
+        "topic": "",
+        "payload": "discover",
+        "payloadType": "str",
+        "x": 150,
+        "y": 180,
+        "wires": [["sensor-node-1"]]
+    },
+    {
+        "id": "sensor-node-1",
+        "type": "tapo-sensor",
+        "z": "example-tab-v2",
+        "name": "Sensor Discovery",
+        "hub": "hub-config-example",
+        "deviceId": "",
+        "deviceName": "",
+        "x": 340,
+        "y": 180,
+        "wires": [["debug-sensors"]]
+    },
+    {
+        "id": "debug-sensors",
+        "type": "debug",
+        "z": "example-tab-v2",
+        "name": "Sensor List (T310/T315)",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "complete": "payload",
+        "x": 560,
+        "y": 180,
+        "wires": []
+    },
+    {
+        "id": "comment-switch-control",
+        "type": "comment",
+        "z": "example-tab-v2",
+        "name": "Step 2: Switch Control (Configure Device ID first)",
+        "info": "After discovery:\n1. Copy device_id from debug output\n2. Edit 'Kitchen Switch' node below\n3. Paste device ID\n4. Deploy\n5. Use these controls",
+        "x": 270,
+        "y": 240,
+        "wires": []
+    },
+    {
+        "id": "switch-on-inject",
+        "type": "inject",
+        "z": "example-tab-v2",
+        "name": "Turn ON",
+        "props": [{"p": "payload"}],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "topic": "",
+        "payload": "on",
+        "payloadType": "str",
+        "x": 120,
+        "y": 280,
+        "wires": [["kitchen-switch"]]
+    },
+    {
+        "id": "switch-off-inject",
+        "type": "inject",
+        "z": "example-tab-v2",
+        "name": "Turn OFF",
+        "props": [{"p": "payload"}],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "topic": "",
+        "payload": "off",
+        "payloadType": "str",
+        "x": 120,
+        "y": 320,
+        "wires": [["kitchen-switch"]]
+    },
+    {
+        "id": "switch-toggle-inject",
+        "type": "inject",
+        "z": "example-tab-v2",
+        "name": "Toggle",
+        "props": [{"p": "payload"}],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "topic": "",
+        "payload": "toggle",
+        "payloadType": "str",
+        "x": 110,
+        "y": 360,
+        "wires": [["kitchen-switch"]]
+    },
+    {
+        "id": "switch-status-inject",
+        "type": "inject",
+        "z": "example-tab-v2",
+        "name": "Get Status",
+        "props": [{"p": "payload"}],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
         "topic": "",
         "payload": "status",
         "payloadType": "str",
-        "x": 170,
-        "y": 500,
-        "wires": [
-            [
-                "tapo-node-3"
-            ]
-        ]
+        "x": 130,
+        "y": 400,
+        "wires": [["kitchen-switch"]]
     },
     {
-        "id": "tapo-node-3",
-        "type": "tapo-s220",
-        "z": "example-flow-tab",
-        "name": "Monitored Switch",
-        "deviceName": "",
-        "deviceIp": "",
+        "id": "kitchen-switch",
+        "type": "tapo-switch",
+        "z": "example-tab-v2",
+        "name": "Kitchen Switch",
+        "hub": "hub-config-example",
         "deviceId": "",
-        "x": 390,
-        "y": 500,
-        "wires": [
-            [
-                "extract-state"
-            ]
-        ]
+        "deviceName": "Kitchen Lights",
+        "x": 320,
+        "y": 340,
+        "wires": [["debug-switch-control"]]
     },
     {
-        "id": "extract-state",
+        "id": "debug-switch-control",
+        "type": "debug",
+        "z": "example-tab-v2",
+        "name": "Switch Response",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "complete": "payload",
+        "x": 530,
+        "y": 340,
+        "wires": []
+    },
+    {
+        "id": "comment-sensor-reading",
+        "type": "comment",
+        "z": "example-tab-v2",
+        "name": "Step 3: Read Temperature Sensor (Configure Device ID first)",
+        "info": "After sensor discovery:\n1. Copy sensor device_id\n2. Edit 'Boiler Room Sensor' node\n3. Paste device ID\n4. Deploy\n5. Click 'Read Sensor'",
+        "x": 300,
+        "y": 460,
+        "wires": []
+    },
+    {
+        "id": "sensor-read-inject",
+        "type": "inject",
+        "z": "example-tab-v2",
+        "name": "Read Sensor",
+        "props": [{"p": "payload"}],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "topic": "",
+        "payload": "read",
+        "payloadType": "str",
+        "x": 130,
+        "y": 500,
+        "wires": [["boiler-sensor"]]
+    },
+    {
+        "id": "sensor-monitor-inject",
+        "type": "inject",
+        "z": "example-tab-v2",
+        "name": "Monitor (every 5 min)",
+        "props": [{"p": "payload"}],
+        "repeat": "300",
+        "crontab": "",
+        "once": false,
+        "topic": "",
+        "payload": "read",
+        "payloadType": "str",
+        "x": 160,
+        "y": 540,
+        "wires": [["boiler-sensor"]]
+    },
+    {
+        "id": "boiler-sensor",
+        "type": "tapo-sensor",
+        "z": "example-tab-v2",
+        "name": "Boiler Room Sensor",
+        "hub": "hub-config-example",
+        "deviceId": "",
+        "deviceName": "Boiler Room",
+        "x": 360,
+        "y": 520,
+        "wires": [["debug-sensor-reading"]]
+    },
+    {
+        "id": "debug-sensor-reading",
+        "type": "debug",
+        "z": "example-tab-v2",
+        "name": "Temperature & Humidity",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "complete": "payload",
+        "x": 590,
+        "y": 520,
+        "wires": []
+    },
+    {
+        "id": "comment-advanced",
+        "type": "comment",
+        "z": "example-tab-v2",
+        "name": "Advanced: Temperature Alert Example",
+        "info": "Monitor temperature and send alert if too high",
+        "x": 210,
+        "y": 600,
+        "wires": []
+    },
+    {
+        "id": "temp-monitor-inject",
+        "type": "inject",
+        "z": "example-tab-v2",
+        "name": "Check Temp (every 5 min)",
+        "props": [{"p": "payload"}],
+        "repeat": "300",
+        "crontab": "",
+        "once": true,
+        "onceDelay": "5",
+        "topic": "",
+        "payload": "read",
+        "payloadType": "str",
+        "x": 180,
+        "y": 640,
+        "wires": [["temp-sensor"]]
+    },
+    {
+        "id": "temp-sensor",
+        "type": "tapo-sensor",
+        "z": "example-tab-v2",
+        "name": "Temperature Monitor",
+        "hub": "hub-config-example",
+        "deviceId": "",
+        "deviceName": "",
+        "x": 390,
+        "y": 640,
+        "wires": [["check-temp-threshold"]]
+    },
+    {
+        "id": "check-temp-threshold",
         "type": "function",
-        "z": "example-flow-tab",
-        "name": "Extract State",
-        "func": "if (msg.payload.success && msg.payload.deviceInfo) {\n    const state = msg.payload.deviceInfo.device_on ? \"ON\" : \"OFF\";\n    msg.payload = {\n        state: state,\n        timestamp: new Date().toLocaleString()\n    };\n    return msg;\n}\nreturn null;",
+        "z": "example-tab-v2",
+        "name": "Check if > 30°C",
+        "func": "if (msg.payload.success && msg.payload.readings) {\n    const temp = msg.payload.readings.temperature;\n    const humidity = msg.payload.readings.humidity;\n    const sensor = msg.payload.device.nickname;\n    \n    if (temp > 30) {\n        msg.payload = {\n            alert: true,\n            message: `⚠️ HIGH TEMPERATURE ALERT!`,\n            sensor: sensor,\n            temperature: temp + '°C',\n            humidity: humidity + '%',\n            timestamp: new Date().toLocaleString()\n        };\n        return msg;\n    } else {\n        msg.payload = {\n            alert: false,\n            sensor: sensor,\n            temperature: temp + '°C',\n            humidity: humidity + '%',\n            status: 'Normal'\n        };\n        return msg;\n    }\n}\nreturn null;",
         "outputs": 1,
+        "timeout": "",
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 570,
-        "y": 500,
-        "wires": [
-            [
-                "debug-3"
-            ]
-        ]
+        "x": 590,
+        "y": 640,
+        "wires": [["debug-temp-alert"]]
     },
     {
-        "id": "debug-3",
+        "id": "debug-temp-alert",
         "type": "debug",
-        "z": "example-flow-tab",
-        "name": "Current State",
+        "z": "example-tab-v2",
+        "name": "Temperature Status",
         "active": true,
         "tosidebar": true,
         "console": false,
-        "tostatus": false,
         "complete": "payload",
-        "targetType": "msg",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 740,
-        "y": 500,
+        "x": 790,
+        "y": 640,
         "wires": []
     },
     {
-        "id": "comment-4",
+        "id": "example-tab-legacy",
+        "type": "tab",
+        "label": "Legacy S220 Examples (v1.x)",
+        "disabled": false,
+        "info": "Example flows using the legacy tapo-s220 node (still works for backward compatibility)"
+    },
+    {
+        "id": "comment-legacy-info",
         "type": "comment",
-        "z": "example-flow-tab",
-        "name": "Example: Status monitoring",
-        "info": "Monitor switch state every 30 seconds",
-        "x": 180,
-        "y": 460,
+        "z": "example-tab-legacy",
+        "name": "ℹ️ Legacy Node (Backward Compatibility)",
+        "info": "These examples use the legacy tapo-s220 node.\nThis node still works but requires credentials in each node.\n\nFor new flows, use the new hub config architecture on the other tab!",
+        "x": 230,
+        "y": 40,
+        "wires": []
+    },
+    {
+        "id": "legacy-discover-inject",
+        "type": "inject",
+        "z": "example-tab-legacy",
+        "name": "Discover Devices",
+        "props": [{"p": "payload"}],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "topic": "",
+        "payload": "discover",
+        "payloadType": "str",
+        "x": 150,
+        "y": 100,
+        "wires": [["legacy-node-1"]]
+    },
+    {
+        "id": "legacy-node-1",
+        "type": "tapo-s220",
+        "z": "example-tab-legacy",
+        "name": "Legacy S220 Node",
+        "hubIp": "",
+        "deviceName": "",
+        "deviceId": "",
+        "x": 350,
+        "y": 100,
+        "wires": [["legacy-debug"]]
+    },
+    {
+        "id": "legacy-debug",
+        "type": "debug",
+        "z": "example-tab-legacy",
+        "name": "Output",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "complete": "payload",
+        "x": 540,
+        "y": 100,
+        "wires": []
+    },
+    {
+        "id": "comment-legacy-note",
+        "type": "comment",
+        "z": "example-tab-legacy",
+        "name": "Note: Configure email, password, and hub IP in the node above",
+        "info": "",
+        "x": 270,
+        "y": 140,
         "wires": []
     }
 ]
-
-
